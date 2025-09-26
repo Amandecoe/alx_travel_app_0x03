@@ -25,6 +25,12 @@ class listingViewSet(viewsets.ModelViewSet):
 class BookingViewSet(viewsets.ModelViewSet):
   queryset = Booking.objects.all()
   serializer_class = BookingSerializer
+     def perform_create(self, serializer):
+        booking = serializer.save()
+        send_booking_confirmation_email.delay(
+            booking.customer.email,  # assumes booking has a FK to customer with email
+            booking.id
+         )
 
 class PaymentViewSet(viewsets.ModelViewSet):
   queryset = Payment.objects.all()
