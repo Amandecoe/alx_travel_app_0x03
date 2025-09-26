@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -25,7 +24,7 @@ class listingViewSet(viewsets.ModelViewSet):
 class BookingViewSet(viewsets.ModelViewSet):
   queryset = Booking.objects.all()
   serializer_class = BookingSerializer
-     def perform_create(self, serializer):
+  def perform_create(self, serializer):
         booking = serializer.save()
         send_booking_confirmation_email.delay(
             booking.customer.email,  # assumes booking has a FK to customer with email
