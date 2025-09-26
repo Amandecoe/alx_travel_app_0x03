@@ -1,38 +1,111 @@
-# 🧳 ALX Travel App – API Enhancement
+🧳 ALX Travel Booking App
 
-This project enhances the **alx_travel_app** by implementing **API views** to manage **listings** and **bookings**.  
-You’ll build fully functional **CRUD (Create, Read, Update, Delete)** endpoints using **Django REST Framework (DRF)** and document them with **Swagger** for ease of access and testing.
+A Django-based travel booking system that allows users to browse trips, make bookings, and receive booking confirmation emails asynchronously using Celery + Redis.
 
-The main focus is on applying **RESTful API design principles** while ensuring endpoints are **well-tested and reliable**.
+✨ Features
 
----
+🔑 User authentication & registration
 
-## 📚 Learning Objective
+🏝️ Manage trips (CRUD for destinations, prices, schedules)
 
-By the end of this project, you should be able to:
+📖 Book trips with instant booking confirmation
 
-- Implement **ViewSets** in Django REST Framework to handle multiple model operations efficiently.
-- Configure **API routes** using DRF’s routers.
-- Apply **RESTful conventions** in endpoint design ands .
-- Document APIs with **Swagger** for interactive exploration.
-- Test APIs with **Postman**/ Postman (or similar tools) to ensure correctness.
+📧 Asynchronous booking confirmation emails (Celery + Django email backend)
 
----
+⚡ RESTful API powered by Django REST Framework
 
-## 🎯 Learning Outcomes
+🗄️ Data stored in SQLite/PostgreSQL (configurable)
 
-You will:
+🛠️ Tech Stack
 
-- Create and manage **CRUD endpoints** for multiple models in Django REST Framework.
-- Integrate automatic **API documentation** with Swagger.
-- Deploy **well-structured and tested API endpoints** that follow REST best practices.
-- Test APIs for both **successful and error scenarios**.
+Backend: Django, Django REST Framework
 
----
+Async Tasks: Celery with Redis as the message broker
 
-## 🔑 Key Concepts
+Database: SQLite (dev), PostgreSQL (prod)
 
-- **CRUD Operations** → Create, Read, Update, Delete functionality for API resources.
-- **ModelViewSet** → A DRF class that provides a complete set of CRUD actions without extra boilerplate.
-- **Routers in DRF** → Automatically map ViewSets to RESTful URLs.
-- **Swagger API Docs** → Automatically generated, interactiv
+Email: Django Email Backend (SMTP or console backend for local testing)
+
+Deployment Ready: Gunicorn/Daphne + Nginx (optional)
+
+📂 Project Structure
+alx_travel_app_0x03/
+│
+├── alx_travel_app/        # Main project settings
+│   ├── __init__.py        # Celery app loaded here
+│   ├── celery.py          # Celery config
+│   ├── settings.py        # Django settings (includes Celery + Email)
+│   ├── urls.py
+│
+├── bookings/              # Booking app
+│   ├── models.py          # Booking model
+│   ├── serializers.py     # DRF serializers
+│   ├── views.py           # BookingViewSet (triggers email task)
+│   ├── tasks.py           # Celery tasks (send booking confirmation email)
+│
+├── manage.py
+└── requirements.txt
+
+⚙️ Setup Instructions
+1. Clone repo
+git clone https://github.com/yourusername/alx_travel_app.git
+cd alx_travel_app_0x03
+
+2. Create virtual environment
+python -m venv venv
+source venv/bin/activate    # On Linux/macOS
+venv\Scripts\activate       # On Windows
+
+3. Install dependencies
+pip install -r requirements.txt
+
+4. Configure environment
+
+In settings.py, configure your email backend:
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # dev
+# or SMTP for real emails
+
+
+Make sure Redis is installed and running:
+
+redis-server
+
+5. Run migrations
+python manage.py migrate
+
+6. Start Django server
+python manage.py runserver
+
+7. Start Celery worker
+celery -A alx_travel_app worker -l info
+
+📬 Sending Confirmation Emails
+
+When a user books a trip, BookingViewSet triggers:
+
+send_booking_confirmation_email.delay(user_email, booking_id)
+
+
+Celery queues the task and sends the email via Django’s email backend.
+
+🧪 Testing
+
+Create a booking via API (e.g., POST /bookings/).
+Check your console (if using console backend) or inbox (if using SMTP).
+
+🚀 Deployment
+
+Use Gunicorn or Daphne for Django
+
+Use Supervisor or systemd to run Celery workers in background
+
+Use Redis or RabbitMQ in production for reliability
+
+🤝 Contributing
+
+PRs welcome! Please open an issue first to discuss major changes.
+
+📄 License
+
+MIT License — free to use and modify.
