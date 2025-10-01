@@ -4,7 +4,7 @@ A Django-based travel booking system that allows users to browse trips, make boo
 
 ## ✨ Features
 
-###🔑 User authentication & registration
+### 🔑 User authentication & registration
 
 ### 🏝️ Manage trips (CRUD for destinations, prices, schedules)
 
@@ -72,9 +72,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # dev
 
 
 ### Make sure Redis is installed and running:
-
+``` bash
 redis-server
-
+```
 ### 5. Run migrations
 ```bash
 python manage.py migrate
